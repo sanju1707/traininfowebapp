@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Train Information</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <style>
+      :root {
+        --mycolor: rgb(7, 160, 7);
+      }
+      body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      #navbar {
+        width: 100%;
+        height: 14%;
+        background-color: white;
+        position: fixed;
+        /* border: 2px solid black; */
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        z-index: 99;
+      }
+
+      #navbar #navdiv0 {
+        width: 15%;
+        height: 90%;
+        border: 2px solid yellow;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      #navbar #navdiv1 {
+        width: 70%;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #navbar #navdiv11 {
+        width: 80%;
+        height: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        align-self: center;
+      }
+      #navbar #navdiv12 {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+      }
+      #alert {
+        width: 12%;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(128, 128, 128, 0.521);
+      }
+      #navbar #navimg2 {
+        width: 8%;
+        height: 80%;
+      }
+      .maindiv {
+        margin-top: 5.6%;
+        width: 100%;
+        height: 1000px;
+        padding-left: 1%;
+      }
+      .maindiv .div1 {
+        width: 98%;
+        height: 100px;
+        /* border: 2px solid black; */
+        background-color: var(--mycolor);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .div1 form {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+      .div1 input[type="text"] {
+        width: 20%;
+        height: 40px;
+        border-style: none;
+        border-radius: 16px;
+        font-size: 1.2em;
+      }
+      .div1 input[type="date"] {
+        width: 15%;
+        height: 40px;
+        border-style: none;
+        border-radius: 16px;
+        font-size: 1.5em;
+      }
+      .div1 input[type="submit"] {
+        width: 15%;
+        height: 40px;
+        background-color: orange;
+        border: 2px;
+        border-radius: 16px;
+        color: white;
+      }
+      #buticon {
+        border-style: none;
+        background-color: white;
+        transform: rotate(90deg);
+        border-radius: 16px;
+      }
+      #marquee-container {
+        width: 98%;
+        height: 30px;
+        margin-bottom: 10px;
+      }
+      #div2 {
+        width: 98%;
+        height: 1000px;
+      }
+      #irctc {
+        width: 80%;
+        height: 30px;
+        border-radius: 16px;
+        background-color: var(--mycolor);
+        color: white;
+        text-align: center;
+        line-height: 30px;
+      }
+      #userdetails {
+        padding-top: 5%;
+        display: flex;
+        flex-direction: row;
+        /* justify-content: center; */
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+      <div id="navdiv0">
+        <div id="userdetails">
+          <img
+            src="https://cdn4.iconfinder.com/data/icons/business-and-office-29/512/396-_profile__avatar__image__dp_-512.png"
+            width="20%"
+            height="30px"
+          />
+          <span id="user"></span>
+        </div>
+        <span id="irctc">IRCTC EXCLUSIVE</span>
+      </div>
+      <div id="navdiv1">
+        <div id="navdiv11">
+          <span id="home">home</span>
+          <span id="contact">contact us</span>
+          <span style="color: red" id="deals">Daily deals</span>
+          <span id="alert">Alert</span>
+          <span id="datetime">Time</span>
+        </div>
+        <div id="navdiv12">
+          <span id="searchtrain">Search Train</span>
+          <span id="searchstation">Search Station</span>
+          <span id="trainbetween">Trains between stations</span>
+          <span id="pnr">PNR status</span>
+          <span>Train Schedule</span>
+        </div>
+      </div>
+      <img id="navimg2" src="./train_logo.png" />
+    </div>
+    <br />
+    <div class="maindiv">
+      <div class="div1">
+        <form>
+          <input
+            type="text"
+            id="input1"
+            value=""
+            placeholder="From Station Code"
+          />
+          <button id="buticon">
+            <span class="material-symbols-outlined icon1">swap_vert</span>
+          </button>
+          <input
+            type="text"
+            id="input2"
+            value=""
+            placeholder="To Station Code"
+          />
+          <input type="date" id="input3" />
+          <input type="submit" value="Search" id="input4" />
+        </form>
+      </div>
+
+      <div id="marquee-container"></div>
+      <div id="div2"></div>
+    </div>
+
+    <script>
+      let user = document.getElementById("user");
+      let userdet = JSON.parse(localStorage.getItem("userdata"));
+      user.innerText = userdet;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        let arr = JSON.parse(localStorage.getItem("trainbtwstations"));
+        if (arr) {
+          document.getElementById("input1").value = arr[0];
+          document.getElementById("input2").value = arr[1];
+          document.getElementById("input3").value = arr[2];
+          fetchTrainData();
+        }
+      });
+
+      setInterval(() => {
+        let time = document.getElementById("datetime");
+        let date = new Date();
+        let day = String(date.getDate()).padStart(2, "0");
+        let month = date.toLocaleString("default", { month: "short" });
+        let year = date.getFullYear();
+        let hours = String(date.getHours()).padStart(2, "0");
+        let minutes = String(date.getMinutes()).padStart(2, "0");
+        let seconds = String(date.getSeconds()).padStart(2, "0");
+        let formattedDateTime = `${day}-${month}-${year} [${hours}:${minutes}:${seconds}]`;
+        time.innerText = formattedDateTime;
+      }, 1000);
+
+      var swapicon = document.getElementById("buticon");
+      swapicon.addEventListener("click", function (e) {
+        e.preventDefault();
+        let input1 = document.getElementById("input1");
+        let input2 = document.getElementById("input2");
+        let temp = 0;
+        temp = input1.value;
+        input1.value = input2.value;
+        input2.value = temp;
+      });
+
+      function createTrains(result, from, to, date) {
+        let box = document.getElementById("div2");
+        box.innerHTML = "";
+
+        let marqueeContainer = document.getElementById("marquee-container");
+        marqueeContainer.innerHTML = "";
+
+        let marquee = document.createElement("marquee");
+        marquee.style.width = "100%";
+        marquee.style.height = "30px";
+
+        let container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.alignItems = "center";
+        container.style.height = "100%";
+
+        let img = document.createElement("img");
+        img.src = "./mariana.jpeg";
+        img.style.height = "30px";
+        img.style.width = "200px";
+        img.style.marginRight = "1px";
+
+        let reldata = document.createElement("div");
+        reldata.textContent = `${result.data.length} results for ${from} to ${to} on date ${date}`;
+        reldata.style.fontSize = "1.5em";
+        reldata.style.textAlign = "center";
+        container.appendChild(img);
+        container.appendChild(reldata);
+
+        marquee.appendChild(container);
+        marqueeContainer.appendChild(marquee);
+
+        for (let i = 0; i < result.data.length; i++) {
+          let div = document.createElement("div");
+          div.style.width = "100%";
+          div.style.height = "200px";
+          div.style.border = "2px solid black";
+          div.style.marginBottom = "10px";
+          div.style.padding = "0";
+
+          let div1 = document.createElement("div");
+          div1.style.width = "100%";
+          div1.style.height = "50px";
+          div1.style.backgroundColor = "lightgrey";
+          div1.style.display = "flex";
+          div1.style.flexDirection = "row";
+          div1.style.justifyContent = "space-between";
+          div1.style.alignItems = "center";
+
+          let p1 = document.createElement("p");
+          p1.innerText = `${result.data[i].train_name} (${result.data[i].train_number})`;
+          p1.style.fontSize = "1.5em";
+          p1.style.margin = "0";
+
+          let span1 = document.createElement("span");
+          span1.innerText = "Runs On: ";
+
+          let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+          daysOfWeek.forEach((day) => {
+            let daySpan = document.createElement("span");
+            daySpan.innerText = day;
+            daySpan.style.color = result.data[i].run_days.includes(day)
+              ? "green"
+              : "red";
+            daySpan.style.marginRight = "30px";
+            span1.appendChild(daySpan);
+          });
+
+          let div2 = document.createElement("div");
+          div2.style.width = "100%";
+          div2.style.height = "50px";
+          div2.style.display = "flex";
+          div2.style.flexDirection = "row";
+          div2.style.justifyContent = "space-between";
+          div2.style.alignItems = "center";
+
+          let fromDiv = document.createElement("div");
+          let p2 = document.createElement("p");
+          p2.style.fontSize = "1em";
+          p2.style.color = "black";
+          let span2 = document.createElement("span");
+          span2.innerText = result.data[i].from_std;
+          span2.style.fontSize = "1.3rem";
+          span2.style.fontWeight = "bold";
+          span2.style.color = "black";
+          p2.appendChild(span2);
+          let p2Text = document.createTextNode(
+            ` | ${result.data[i].from_station_name}`
+          );
+          p2.appendChild(p2Text);
+
+          let p3 = document.createElement("p");
+          p3.innerText = `-------${result.data[i].duration} -------`;
+          p3.style.fontSize = "1.3em";
+          p3.style.color = "black";
+
+          let toDiv = document.createElement("div");
+          let p4 = document.createElement("p");
+          p4.style.fontSize = "1em";
+          p4.style.color = "black";
+          let span3 = document.createElement("span");
+          span3.innerText = result.data[i].to_std;
+          span3.style.fontSize = "1.3em";
+          span3.style.color = "black";
+          span3.style.fontWeight = "bold";
+          p4.appendChild(span3);
+          let p4Text = document.createTextNode(
+            ` | ${result.data[i].to_station_name}`
+          );
+          p4.appendChild(p4Text);
+
+          fromDiv.appendChild(p2);
+          toDiv.appendChild(p4);
+
+          let div3 = document.createElement("div");
+          div3.style.width = "100%";
+          div3.style.height = "100px";
+          div3.style.display = "flex";
+          div3.style.flexDirection = "row";
+          div3.style.gap = "10px";
+          div3.style.justifyContent = "flex-start";
+          div3.style.alignItems = "center";
+          for (let j = 0; j < result.data[i].class_type.length; j++) {
+            let div3in = document.createElement("div");
+            let p5 = document.createElement("p");
+            p5.innerText = "Available";
+            p5.style.color = "green";
+            div3in.innerText = result.data[i].class_type[j];
+            div3in.style.width = "10%";
+            div3in.style.height = "70px";
+            div3in.style.border = "2px solid white";
+            div3in.style.borderRadius = "16px";
+            div3in.style.alignSelf = "center";
+            div3in.style.backgroundColor = "lightgrey";
+            div3in.style.display = "flex";
+            div3in.style.flexDirection = "column";
+            div3in.style.justifyContent = "center";
+            div3in.style.alignItems = "center";
+            div3in.appendChild(p5);
+            div3.appendChild(div3in);
+          }
+
+          div1.append(p1, span1);
+          div2.append(fromDiv, p3, toDiv);
+
+          div.append(div1, div2, div3);
+          box.appendChild(div);
+        }
+      }
+      const apiKeys = [
+        "1ceb320b1bmsh1903caf3209ece7p11899bjsnc93161bc5ae7",
+        "cb6dc297dbmsh772551ce0b7c733p1bed14jsna29515c6e4cb",
+        "9ed6cef5f0msh3eb31cb4dfcdbe1p156343jsnddda033fbe65",
+        "6321868ffemshe3cd31d582e069bp159bbfjsnf2b5c91a7544",
+        "f7377be63bmshd069cf8d8ed5216p130c03jsnb6276b58970e",
+        "110e0a43abmsh9ef7c58d257056ep1de352jsn46e317da7487",
+        "6ff5242508mshf473990ba31d5d9p1081cejsn02b4ad82dbfd",
+        "70afa65329msh2a0fd0b9bb1cbd9p1b95edjsn25fe7837a37a",
+        "866725a35amsha07c0231287b94bp1d9bfajsn8773405c85dc",
+        "35a9544a59msh62568424df872c6p151ffejsnc41daea0baeb",
+        "4aaecb3d94mshd80a80751b5180dp1f0f19jsn9e8a4535fff6",
+        "3fd69550d1msh6547ee5861ea825p14b3bcjsn127de078860b",
+        "f76fdda65dmshcd797a84e14323dp1e010ejsn4620ba70b13e",
+      ];
+
+      let currentKeyIndex = 0;
+      let apiKeyAttempts = 0;
+
+      const fetchTrainData = async () => {
+        let from = document.getElementById("input1").value;
+        let to = document.getElementById("input2").value;
+        let date = document.getElementById("input3").value;
+
+        const url = `https://irctc1.p.rapidapi.com/api/v3/trainBetweenStations?fromStationCode=${from}&toStationCode=${to}&dateOfJourney=${date}`;
+        const options = {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key": apiKeys[currentKeyIndex],
+            "x-rapidapi-host": "irctc1.p.rapidapi.com",
+          },
+        };
+
+        try {
+          const response = await fetch(url, options);
+          if (!response.ok) {
+            if (response.status === 429) {
+              console.warn(`Rate limit hit, rotating API key`);
+              currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
+              apiKeyAttempts++;
+
+              // Check if all keys have been exhausted
+              if (apiKeyAttempts >= apiKeys.length) {
+                throw new Error(
+                  "All API keys have hit their rate limit. Please try again later."
+                );
+              }
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              return fetchTrainData();
+            } else {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+          }
+          // Reset attempts on successful response
+          apiKeyAttempts = 0;
+          const result = await response.json();
+          createTrains(result, from, to, date);
+        } catch (error) {
+          console.error(error);
+          let box = document.getElementById("div2");
+          box.innerText = error.message;
+        }
+      };
+
+      document.getElementById("input4").addEventListener("click", function (e) {
+        e.preventDefault();
+        fetchTrainData();
+      });
+
+      let home = document.getElementById("home");
+      home.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign("./home.html");
+      });
+
+      let deals = document.getElementById("deals");
+      deals.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign(
+          "https://www.amazon.in/events/greatfreedomsale?linkCode=ll2%2Cur2&linkId=6e8e3d8f31513cf92e862073d65fefae%2C41c3b8fb1ad95d37bf6d1ce4f06d8dc1&_encoding=UTF8&ref_=as_li_ss_tl&language=en_IN&tag=irctcdev07-21%2Circtcdev07-21&creative=24630&camp=3638&discounts-widget=%2522%257B%255C%2522state%255C%2522%253A%257B%255C%2522refinementFilters%255C%2522%253A%257B%257D%257D%252C%255C%2522version%255C%2522%253A1%257D%2522"
+        );
+      });
+
+      let searchtrain = document.getElementById("searchtrain");
+      searchtrain.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign("./trainstspnr.html");
+      });
+      let searchstation = document.getElementById("searchstation");
+      searchstation.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign("./trainstspnr.html");
+      });
+
+      let pnr = document.getElementById("pnr");
+      pnr.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign("./trainstspnr.html");
+      });
+      let trainbetween = document.getElementById("trainbetween");
+      trainbetween.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign("./trainbtwstations.html");
+      });
+    </script>
+  </body>
+</html>
+
+<!-- 
+ '1ceb320b1bmsh1903caf3209ece7p11899bjsnc93161bc5ae7'
+ 'cb6dc297dbmsh772551ce0b7c733p1bed14jsna29515c6e4cb'
+ '9ed6cef5f0msh3eb31cb4dfcdbe1p156343jsnddda033fbe65'
+ '6321868ffemshe3cd31d582e069bp159bbfjsnf2b5c91a7544'
+ 'f7377be63bmshd069cf8d8ed5216p130c03jsnb6276b58970e'
+ '110e0a43abmsh9ef7c58d257056ep1de352jsn46e317da7487'
+ '6ff5242508mshf473990ba31d5d9p1081cejsn02b4ad82dbfd'
+ '70afa65329msh2a0fd0b9bb1cbd9p1b95edjsn25fe7837a37a'
+ '866725a35amsha07c0231287b94bp1d9bfajsn8773405c85dc'
+ '35a9544a59msh62568424df872c6p151ffejsnc41daea0baeb'
+ '4aaecb3d94mshd80a80751b5180dp1f0f19jsn9e8a4535fff6'
+ '3fd69550d1msh6547ee5861ea825p14b3bcjsn127de078860b'
+ 'f76fdda65dmshcd797a84e14323dp1e010ejsn4620ba70b13e' -->
