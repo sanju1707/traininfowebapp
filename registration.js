@@ -74,7 +74,7 @@ function validate() {
 
 // Check if user already exists by email
 function checkUserExists(email) {
-  const URL = `http://localhost:3000/userdata?email=${encodeURIComponent(email)}`;
+  const URL = `https://irctc-user-server.onrender.com/userdata?email=${encodeURIComponent(email)}`;
   return fetch(URL)
     .then((response) => response.json())
     .then((data) => {
@@ -109,7 +109,7 @@ function handleSubmit(e) {
           };
 
           // Simulating a POST request; adjust URL as needed for your actual API
-          const URL = "http://localhost:3000/userdata";
+          const URL = "https://irctc-user-server.onrender.com/userdata";
           const options = {
             method: "POST",
             headers: {
